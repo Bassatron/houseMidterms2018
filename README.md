@@ -23,4 +23,38 @@ Primarily, we were able to see how each state has traditionally voted over the p
 
 ![Average Votes by State](https://github.com/Bassatron/housemidterms2018/blob/master/figures/Party_Voting_Averages_by_State.png?raw=true)
 
-![Average Votes by State](https://github.com/Bassatron/housemidterms2018/blob/master/figures/Distributions_of_Change_in_House Seats.png?raw=true)
+![Average Votes by State](https://github.com/Bassatron/housemidterms2018/blob/master/figures/Distributions_of_Change_in_House_Seats.png?raw=true)
+
+## Models
+### Exploratory Baseline Models
+**Linear Model**
+
+We produced a simple exploratory linear regression to get a sense for what predictors would provide the most influence on the results. After producing this exploratory regression, we employed bootstrapping to determine p values for each of our predictors. This allowed us to determine quantitatively which predictors were statistically significant in a linear regression, which allowed us to get a sense of which predictors will be the most important for us as we moved towards more advanced models.
+
+We were able to determine that many of our predictors were not statistically significant. To look into this further, we bootstrap across many samples of the data to produce a more accurate picture of which predictors are significant in our linear regression.
+
+**Ridge Model**
+
+We use a Ridge linear regression model to further get a sense of which predictors were influential in a regression. Ridge regression provides protections against overfitting to the train data by penalizing excessively large coefficients. This increases the predictive accuracy on the test data, and provides coefficients that we can use to more accurately predict the importance of each predictor. We were only able to achieve accuracy of approximately 33% with the ridge model. Only being able to correctly predict the outcome of midterm elections in 33% of midterm elections is not particularly useful and demonstrates the need for more advanced models.
+
+**Lasso Model**
+
+We use a Lasso linear regression to try perform some variable selection on the data. Lasso regression is notorious for its tendency to prefer the removal of insignificant predictors. Thus, by using Lasso regression, we can get an even better sense of which predictors are effectively irrelevant. We discarded those predictors and focused on the remaining ones. Similarly to the ridge model, the lasso model only achieved 33% classification accuracy and solidified the need for more nuanced models.
+
+### Random Forests
+
+After creating basic models to get a general sense of the significance and direction of the predictors, we created more nuanced models to better predict the 2018 midterm results. The first of these models is a Random Forest Classifier. In order to better tune our Random Forest to the data, we tuned the parameters that control the number of trees in the model and the max depth of those trees, until we arrived at the model that recorded the best accuracy on the test data. We found that approximately 65 trees of depth 10 generated the most reliable model, which had 82.0% accuracy.
+
+The bar graph below shows how frequently each of the predictors was used as the most important split for a given tree. We can see that Total population, president_party and seats to defend are never the most important split as those numbers would be the same across all districts for a given year.
+
+![Random Forest Top Predictors](https://github.com/Bassatron/housemidterms2018/blob/master/figures/rf_top_preds.png?raw=true)
+
+### Boosting
+
+Continuing with our more advanced modeling, we created a boosting model through Ada Boost Classifier. The boosting model we employ generates successive Decision Tree Classifiers that outweigh the data points that the previous model struggled with. Thus through multiple iterations we can develop a model that performs better on the challenging data points and thus performs better overall. In order to tune our boosting model, we toggled the base depth of the underlying Decision Tree Classifiers as well as the learning rate which controls the degree to which a model will outweigh the challenging data points from the previous model. The graph below shows the accuracy of our best tuned boosting model on the 2018 midterm test data. As you can see in the graph, the model improves significantly in accuracy during the initial iterations, reaches peak accuracy, and then begins to excessively focus on the challenging data and lose accuracy. We reached our maximum classification accuracy of about 84.5% around approximately 60 iterations of boosting.
+
+![Boosting Iterations](https://github.com/Bassatron/housemidterms2018/blob/master/figures/boost_test_150.png?raw=true)
+
+The graph below also shows classification accuracy by iteration, but includes the accuracy on the train data to demonstrate how the possible dangers of overfitting increase significantly with increased iterations.
+
+![Boosting Accuracy](https://github.com/Bassatron/housemidterms2018/blob/master/figures/boost_both_150.png?raw=true)
