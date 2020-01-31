@@ -58,3 +58,17 @@ Continuing with our more advanced modeling, we created a boosting model through 
 The graph below also shows classification accuracy by iteration, but includes the accuracy on the train data to demonstrate how the possible dangers of overfitting increase significantly with increased iterations.
 
 ![Boosting Accuracy](https://github.com/Bassatron/housemidterms2018/blob/master/figures/boost_both_150.png?raw=true)
+
+### Neural Networks
+
+Our final model that we tested was a Neural Network. We believed that it would be able to properly model such a complex problem; however, it would have the drawback of losing interpretability from the decision tree ensemble methods. When testing the neural network we tried many different configurations of number of layers, size of hidden layers, regularization, and activation functions. The best configuration that we ended with was 3 hidden layers, each with 100 nodes, and using a ReLu activation function with L1 regularization. When training the net we had a 30% validation split with 2000 epochs and used batches in size of 64. The graph illustrates the accuracy and loss over the training and the final accuracy on the net was right around the ensemble methods. We believe with more data it could keep increasing; however, we decided not to use data augmentation due to the variability in voters and not wanting to create bad data.
+
+![Neural Network Training](https://github.com/Bassatron/housemidterms2018/blob/master/figures/neuralNet_train.png?raw=true)
+
+## Interpretation
+
+From our modeling analysis we have determined that the most effective models in predicting the results of the 2018 midterm elections were the boosting model and the artificial neural network, whose classification accuracy around 85%. This result was dramatically better than the 33% accuracy achieved by the our baseline linear model. We found the ethnicity variables to be the most effective predictors, while the sex and age variables were also strong predictors.
+
+## Conclusion
+
+From our analysis, we learned the importance of diligence when sourcing and cleaning data, how isolating the important features and data points dramatically increases the performance of any model using that data. We were able to tune our best models to correctly predict the winner in approximately 85% of districts nationally in the 2018 midterm elections. Nevertheless, our 85% accuracy leaves significant room for future improvement and highlights the challenge of predicting election results through the lens of demographics. 
